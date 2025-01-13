@@ -1,0 +1,336 @@
+
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`...
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+events.out.tfevents.1729044501.kao-dgxa-e10-u17.1261296.4: 100%|██████████| 5.48k/5.48k [00:00<00:00, 36.4kB/s]
+events.out.tfevents.1729044790.kao-dgxa-e10-u17.1261296.5: 100%|██████████| 353k/353k [00:00<00:00, 1.94MB/s]
+spiece.model: 100%|██████████| 1.10M/1.10M [00:00<00:00, 3.93MB/s]MB/s]   | 0.00/5.48k [00:00<?, ?B/s]
+events.out.tfevents.1730432710.kao-dgxa-e10-u17.937113.0: 100%|██████████| 206k/206k [00:00<00:00, 656kB/s]
+training_args.bin: 100%|██████████| 5.24k/5.24k [00:00<00:00, 40.5kB/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+model.safetensors: 100%|██████████| 1.10G/1.10G [00:41<00:00, 26.5MB/s]
+Upload 6 LFS files: 100%|██████████| 6/6 [00:41<00:00,  6.94s/it]
+Upload 6 LFS files:  17%|█▋        | 1/6 [00:41<03:28, 41.64s/it]
+ 2.2 Phép băm địa phương nhạy cảm (LSH)
+ - Tách không gian vectơ: Tất cả các vectơ có tích số chấm với véc tơ bình thường là dương đều nằm ở một bên của mặt phẳng. Ngược lại, nếu tích số chấm là âm thì vectơ nằm ở phía bên kia của mặt phẳng.
+ - Mã hóa các thùng băm: Đối với một vectơ, ta có thể lấy tích số chấm của nó với tất cả các mặt phẳng, sau đó mã hóa thông tin này để gán vectơ cho một thùng băm duy nhất. Khi vectơ chỉ về phía đối diện của siêu mặt phẳng so với bình thường thì mã hóa bằng
+ - Đối với cây kD, chúng ta sẽ thực hiện theo hai cách khác nhau. Cách thứ nhất là dùng vectơ để biểu diễn từng điểm dữ liệu (phương pháp 2), cách thứ hai là dùng cấu trúc Điểm nổi x, y, z; ; được làm sáng tỏ. (phương pháp 1)
+ 1 nếu phương pháp == "cổ điển" hay phương pháp là "tái cân bằng" :
+ 2 điểm <- Điểm (x, y, z)
+ 3 cách khác :
+ 4 điểm <- [x, y, z]
+ - Đối với LSH, chúng ta cũng xử lý các điểm dữ liệu biểu diễn bằng dạng vectơ để thuận tiện cho việc tính tích vô hướng. Ngoài ra, vì các điểm dữ liệu đều có tọa độ dương, nên sự phân bố bị lệch về một phía, nên dùng nhiều mặt phẳng có thể tạo ra các xô không chứa điểm nào. Vì vậy, chúng ta di chuyển trục sao cho tâm O mới có tọa độ (50,50,50) để các điểm sẽ phân bố đều hơn trong hệ tọa độ mới này.
+ 1 điểm <- [x - 50,y - 50,z - 50]
+ 2 điểm.phụ (điểm)
+ 3.2 kD-Cây xây dựng
+ Phương pháp 1 - Không cân bằng kD-Cây:
+ Chúng ta chèn liên tục theo mã giả dưới đây
+ 1 hàm chèn (gốc, dữ liệu, độ sâu):
+ 2 nếu gốc là Không:
+ 3 trả lại Nút (dữ liệu)
+ 4 trục <- chiều sâu % đ
+ 5 root cor <- chiều sâu. dữ liệu.trục
+ 6 dữ liệu cor <- dữ liệu.trục
+ 7
+ 8 nếu root cor > dữ liệu cor:
+ 9 root.left <- chèn (gốc.left, dữ liệu, độ sâu + 1)
+ 10 khác:
+ 11 root.right <- chèn (gốc.right, dữ liệu, độ sâu + 1)
+ 12 trả lại gốc
+ 13 end
+ Hàm
+ 14
+ 15 hàm xây dựng kD
+ Cây (mô hình, toàn bộ dữ liệu):
+ 16 đối với dữ liệu trong toàn bộ dữ liệu:
+ 17 mô hình.insert (dữ liệu)
+ 18 end
+ Hàm
+ Phương pháp 1 - Cân bằng kD-Cây:
+ Trước hết sắp xếp lại dữ liệu theo trung vị của các tọa độ cho chiều chia đã chọn. đệ quy xuống cùng một cây.
+ 1 hàm re-balance (dữ liệu, đầu, cuối, độ sâu)
+ 2 nếu đầu >= cuối
+ 3 trả lại Không
+ 4 trục <- chiều sâu % đ
+ 5 tiểu dữ liệu <- dữ liệu <<- đầu-> cuối]
+ 6 tiểu dữ liệu <- sắp xếp theo trục (tiểu dữ liệu, trục = trục)
+ 7
+ 8 giữa <- (đầu + cuối)/2
+ 9 re-balance (dữ liệu, đầu, giữa, độ sâu + 1)
+ 10 re-balance (dữ liệu, giữa, cuối, độ sâu + 1)
+ 11 end
+ Hàm
+ Khi xây dựng cây, chúng ta cũng sử dụng hàm chèn như trên, nhưng thứ tự các điểm sẽ khác nhau theo thứ tự sắp xếp như trên (chọn giá trị trung vị của từng vùng)
+ 1 hàm xây dựng kD
+ Cây trước (mô hình, điểm, đầu, cuối)
+ 2 nếu đầu >= cuối:
+ 3 trả lại Không
+ 4 giữa <- (đầu + cuối)/2
+ 5 mô hình.insert (điểm[giữa])
+ 6 mô hình.xây dựng kD
+ Cây trước (điểm, đầu, giữa)
+ 7 mô hình.xây dựng kD
+ Cây trước (điểm, giữa + 1, cuối)
+ 8 end
+ Hàm
+ Phương pháp 2 - Gần cân bằng cây kD:
+ Nếu hộp đóng thành lượng dữ liệu <= giới hạn dữ liệu -> đó là nút lá của cây kD, thì giờ ta sẽ lưu dữ liệu. Nếu không, ta chỉ lưu các giá trị chia (tìm median theo tọa độ với biến số lớn nhất) và chiều chia (lưu chiều tọa độ đầy đủ).
+ 1 hàm xây dựng kD
+ Cây (mô hình, toàn dữ liệu)
+ 2 nếu len (toàn dữ liệu) là 0:
+ 3 trả về không
+ 4 nếu len (toàn dữ liệu) <= mô hình.min chia:
+ 5 trả về Nút (toàn dữ liệu, 0, toàn dữ liệu [0], Không, Không)
+ 6
+ 7 chia giá trị <- mô hình.ghi biến số
+ chiều (toàn dữ liệu)
+ 8 dữ liệu trái, trung gian, phải dữ liệu <mô hình.chia (toàn dữ liệu, chia giá trị)
+ 9 tiểu phần trái <- mô hình.xây dựng kD
+ Cây (tả dữ liệu)
+ 10 tiểu phần phải <- mô hình.xây dựng kD
+ Cây (tả dữ liệu)
+ 11 nút
+ nút ([], chia giá trị, trung gian, tiểu phần trái, tiểu phần phải)
+ 12 nếu nút. trái là không:
+ 13 nút. trái.chính
+ 14 nếu nút.phải là không:
+ 15 nút.chính
+ 16 nút trả về
+ 17 cuối
+ Hàm xây dựng kD
+ Cả hai phương pháp đều sử dụng cùng một phương pháp như đã nói ở trên, sự khác biệt duy nhất là phương pháp 1, tất cả các nút có thể có cơ hội được xem xét với nút đích trong khi phương pháp 2 chỉ có nút lá. cơ hội tham gia.
+ 1 hàm tìmNN (gốc, điểm truy vấn, nút tốt nhất, khoảng cách tốt nhất, chiều sâu)
+ 2 nếu không phải gốc
+ 3 trả về khoảng cách tốt nhất
+ 4 dist <- khoảng cách của các hạt (gốc.data, điểm truy vấn)
+ 5
+ 6 nếu dist < khoảng cách tốt nhất
+ 7 nút tốt nhất.append (gốc)
+ 8 khoảng cách tốt nhất <- dist
+ 4/8
+ TÌM KIẾM CÂY CÂY CÓ THẨM ĐỊNH K-DIMENSION DANH MỤC TRONG DSA, (CO2003), HCMUT
+ 9 24 end
+ Hàm
+ 10 axis = depth % dim(query_point)
+ 11 root_cor <- root.data.axis
+ 12 data_cor <- data.axis
+ 13
+ 14 nếu data_cor
+ 15 good side <- root.left
+ 16 bad side <- root.right
+ 17 else
+ 18 good side <- root.right
+ 19 bad side <- root.left
+ 20
+ 21 best distance <- findNN (good side,query_point, best_node
+ 22, best distance, depth + 1)
+ 23 nếu abs(root_cor - data_cor)
+ 24 best distance
+ tìmNN (bad side,query_point, best_node,
+ 25 best distance, depth + 1)
+ 26 trả về best distance
+ 27 end
+ Hàm
+ 28
+ 29 function findkNN (model,query_point, k):
+ 30 initialize stack
+ 31 findNN (model.root,query_point,stack,infinity,0)
+ 32 for i in range (k)
+ 33 if size (stack) >= 1
+ 34 point = stack.pop()
+ 35 print(point)
+ 36 end
+ 3.4 Xây dựng LSH:
+ Xây dựng:
+ Trước hết, chúng ta sẽ ngẫu nhiên hóa các mặt phẳng, có thể tạo ra một danh sách các mặt phẳng bằng phương pháp vũ trụ hoặc chỉ một mặt phẳng cho phương pháp lật. Sau đó cho mỗi mặt phẳng, chúng ta sẽ tạo 2 thư mục, một để lưu trữ véc tơ, một để lưu trữ chỉ số của véc tơ.
+ 1 mặt phẳng l <- [ngẫu nhiên với kích thước (N DIMS, N KẾ HOẠCH) cho trong phạm vi (N UNIVERSE)]
+ 2
+ 3 hàm tạo bảng băm (mô hình, vectơ, máy bay)
+ 4 số máy bay <- số máy bay
+ 5 số máy bay <- 2^ số máy bay
+ 6
+ 7 #dictionary hash_table value
+ 8 bảng băm = {i : [] cho i trong phạm vi (số máy bay)}
+ 9
+ 10 #dictionary id_table store value
+ 11 id_table = {i : [] cho i trong phạm vi (số máy bay)}
+ 12
+ 13 cho i, v trong enumerate (vecs)
+ 14
+ 15 h = model.hash_v(v, máy bay)
+ 16
+ 17 #store v trong các xô “h”
+ 18 bảng băm [h].
+ 19
+ 20 #store id của v trong các xô “h”
+ 21 id_table [h].
+ 22
+ 23 trả lại bảng băm, bảng mã
+ Hàm băm:
+ Để tính hàm băm cho một véc tor_query đã cho, chúng ta sẽ tính tích vô hướng của nó cho mỗi mặt phẳng và sau đó chèn giá trị dấu vào danh sách. Khi chúng ta đã qua tất cả các mặt phẳng, chúng ta sẽ chuyển đổi danh sách nhị phân đó thành một giá trị băm thập phân duy nhất.
+ 1 hàm băm v(mô hình, v, máy bay)
+ 2 sản phẩm chấm
+ np.dot(v, máy bay)
+ # (1,3) * (3,4)
+ 3 dấu của sản phẩm chấm
+ np.sign(sản phẩm chấm)
+ 4 h <- (dấu của sản phẩm chấm >= 0)
+ 5
+ 6 giá trị băm
+ 7 n máy bay
+ 7 số máy bay
+ 8
+ 9 cho i trong phạm vi (n máy bay)
+ 10 giá trị băm += pow(2,i) * h[i]
+ 11 giá trị băm trả về
+ 12 hàm cuối
+3.5 Phương pháp Tìm kiếm kNN bằng LSH:
+ Chúng ta sẽ dùng phương pháp này để đảo ngược 1 hoặc 2 giá trị bit trong giá trị băm, để chúng ta có thể tạo các giá trị băm khác để tăng độ chính xác của việc tìm kiếm (bởi vì ngoài việc tìm trong xô [giá trị băm], chúng ta còn tìm được lan tỏa xung quanh phương pháp \"phép tô \": \" xô [giá trị băm\"])
+ 1 hàm lật 1 bit (bánh)
+ 2 # chuyển đổi giá trị thập phân sang giá trị nhị phân
+ 3 bits <- nhị phân (bánh)
+ 4 # thả phần 0b trong giá trị bin
+ 5 khởi tạo danh sách các hashs
+ 6 cho i trong phạm vi (len (bit))
+ 7 bits <- théc
+ 3 khởi tạo danh sách các bảng mã
+ 4
+ 5 cho các mã nằm trong phạm vi (N
+ ĐẠI HỌC)
+ 6 mặt phẳng <- mô hình.máy bay
+ l [id]
+ 7 bảng mã, bảng mã <mô hình. tạo bảng mã (mô hình.dữ liệu, máy bay)
+ 8 bảng mã.phụ lục (bảng mã)
+ 9 bảng mã.phụ lục (bảng mã)
+ 10
+ 11 bảng mã
+ 12 bảng mã
+ 12 bảng mã
+ 13 cuối
+ Hàm
+ 3.6 K lân cận gần nhất trong LSH:
+ hàm kNN:
+ Chúng ta sẽ chuyển đổi hàm của phương pháp kNN, nhưng thay vì dùng toàn bộ tập dữ liệu để tìm kiếm, chúng ta sẽ dùng hai phương pháp trên để trích ra một phần dữ liệu tìm kiếm. Có 2 phương pháp chính để đo sự tương đồng: 1 là dùng khoảng cách euclid, 2 là tương đồng cosin
+ 1 hàm kNN(vector, véc tơ nhà hàng xóm l, k <-1)
+ 2 khởi tạo danh sách tương đồng l
+ 3
+ 4 cho phần tử trong véc tơ nhà hàng xóm l
+ 5 tương đồng cosin <- cosin tương đồng (vector, phần tử)
+ 6 tương đồng l.phụ (cos tương đồng)
+ 7
+ 8 sắp xếp các i-x <- sắp xếp các i-x < (tương đồng l)
+ 9 k-i-x <- sắp xếp các i-x <-k:]
+ # cuối cùng của phần tử
+ 10
+ 11 trả lại k-i-x
+ 12 kết thúc
+ Hàm
+ Chúng ta sẽ tạo 2 danh sách - 1 là danh sách để lưu trữ các vectơ, 2 là danh sách để lưu trữ các chỉ số của vectơ đó, ngoài ra, để tiện cho việc kiểm tra xem vectơ đó có tồn tại trong danh sách hay không, chúng ta có thể tạo một tập khác để lưu trữ các giá trị chỉ số duy nhất trong danh sách.
+ 1 khởi tạo danh sách điểm nhà hàng xóm l
+ 2 khởi tạo danh sách idxs nhà hàng xóm l
+ 3 khởi tạo tập hợp idxs nhà hàng xóm
+ Rút gọn dữ liệu tập con:
+ Chúng ta sẽ quay vòng qua tất cả các bảng băm với vũ trụ, và với cách lật, chúng ta sẽ quay vòng qua các giá trị băm tìm kiếm trong một phép đảo ngược 1- hoặc 2-bit, cho mỗi điểm xuất hiện trong các xô: chúng ta sẽ kiểm tra xem nó có tồn tại trong tập hợp hay không, đi đến điểm tiếp theo, nếu không thì sẽ thêm điểm đó.
+ 1 cho đơn vị đơn vị trong phạm vi (NUNIVERSE)
+ 2 mặt phẳng <- mô hình.máy bay l [unixid]
+ 3
+ 4 # lấy giá trị băm của điểm truy vấn để tìm lân cận gần nhất của điều này
+ 5 giá trị băm <- mô hình.hash v(point truy vấn, máy bay)
+ 6
+ 7 bảng băm <- mô hình.hash tables [unixid]
+ 8 id bảng <- mô hình.id tables [unixid]
+ 9
+3.7 Main
+ kD-Tree:
+ Ở đây chúng ta sẽ có các hàm xây dựng phương pháp với các phương pháp có thể có 3 loại: cổ điển, re-balance, flip tương ứng như đã nói ở trên.
+ 1 # xây dựng phương pháp
+ 2 hàm xây dựng phương pháp (tên, phương pháp <- "cổ điển")
+ 3 điểm <- đọc
+ Số liệu (tên, phương pháp)
+ 4 nếu phương pháp là "re-balance"
+ 5 tiền xử lý (điểm, 0, 0, len(điểm))
+ 6 mô hình <- kDTree()
+ 7 mô hình. xây dựng kDTree
+ trước (điểm, 0, len(điểm))
+ 8 khác nếu phương pháp là "cổ điển"
+ 9 mô hình <- kDTree()
+ 10 mô hình. xây dựng kDTree (điểm)
+ 11 khác
+ 12 mô hình <- kDTree chia (điểm, 3)
+ 13 mô hình.set
+ Phương pháp (phương pháp)
+ 6/8
+ TÌM KIẾM CHUNG VỚI PHƯƠNG ÁN PHÊ DUYỆT CÂY KHOÁNG SẢN TRONG DSA, (CO2003), HCMUT
+ 14 mô hình trả về, điểm
+ 15 hàm cuối
+ Nếu muốn kiểm tra tìm kiếm kNN, chúng ta sẽ tạo các điểm ngẫu nhiên và sau đó tiền xử lý để khớp với loại cây kD-Tree cần xử lý.
+ 1 hàm gen_query_point(phương pháp)
+ 2 khởi tạo danh sách l_gen
+ 3 cho j trong phạm vi (0,3):
+ 4 g là tròn (ngẫu nhiên từ (0,100), 3)
+ 5 l_gen.append(g)
+ 6 nếu phương pháp là "cổ điển" hoặc phương pháp là "re-balance"
+ 7 x <- l_gen[0]
+ 8 y <- l_gen[1]
+ 9 z <- l_gen[2]
+ 10 điểm <- Điểm (x,y,z)
+ 11 khác :
+ 12 điểm <- l_gen #x,y,z
+ 13 điểm trả về
+ 14 kết thúc
+ Hàm
+ LSH:.
+ Cả hai phương pháp đều có thể được sử dụng khi chỉ xây dựng một mô hình duy nhất, sự khác biệt là mỗi lần chúng ta sử dụng phương pháp lật chúng ta sẽ tạo một bảng băm mới khớp với mặt phẳng ngẫu nhiên. Đối với Vũ trụ, nó đã được xây dựng.
+ 1 mô hình là LSH (điểm)
+ 2
+ 3 mô hình. tạo máy bay (10,25)
+ 4 mô hình. tạo bảng băm ()
+ 3.7 Main
+ 5 model.view_result("universe", 3,2)
+ 6 model.view_result("flipped", 3,2)
+ Giống như kD-tree, để ngẫu nhiên tạo một điểm truy vấn mới và sau đó xử lý trước
+ 1 function gen_random_point(dims)
+ 2 khởi tạo danh sách l_gen
+ 3 cho j trong phạm vi (0,dims)
+ 4 g <- round(random.uniform(0,100), 3)
+ 5 l_gen.append(g)
+ 6 point <- [x - 50,000 cho x trong l_gen]
+ 7 return point
+ 8 end
+ 4 RESULTS
+ Mô tả:
+ Chúng ta sẽ đo thời gian để so sánh hiệu quả của các cấu trúc dữ liệu với nhau với các phép toán chính: con structure, điểm tìm kiếm trong dữ liệu, điểm tìm kiếm ngẫu nhiên, kNN-search với số điểm dữ liệu tương ứng. Chúng ta dùng k = 3 cho phương pháp kNN-search anh số-universe là 25. Dữ liệu được tạo ra từ hàm gen Dữ liệu được xác định ở trên với số n được thể hiện dưới đây. Chúng ta sẽ dùng mô-đun thời gian của Python để đo thời gian, sau đó tổng hợp thời gian vào từ điển để tạo ra file csv như bạn có thể thấy dưới đây. File log đi qua quá trình xây dựng cấu trúc dữ liệu và [sử dụng các phương pháp ở đây: log.txt] (http://drive.google.com/file/d/1TzJXvr4-cCMHcrxA1LInPD2X38x78LPS/view?usp=sharing)
+ - n = 10: dữ liệu từ “ten.csv”.
+ <jsontable name="bang_1"> </jsontable>
+ trong đó ký hiệu: kD-nb là kD-tree không cân bằng, kD-b là kD-tree cân bằng, băm-u là băm-universe, băm-f là băm-flip.
+ 7/8
+ Dự án trong DSA, (CO2003), HCMUT NGUYỄN ĐẠC HOÀNG PHÚ
+ 5 KẾT LUẬN
+ 3.7 Chính
+ Chúng ta không dùng trường hợp giá trị tách cây kD-Tree trong khi đo theo từng hình thức: việc xây dựng cây mất khá nhiều thời gian đôi khi lên đến 20, 30 phút. Điều này xảy ra vì dữ liệu
+ 6
+ THI ĐUA TRÊN
+ BẢNG TRĂM, BẢNG TRĂM
+ - Cấu trúc dữ liệu lưu trữ dữ liệu đa chiều.
+ - BẢNG*-cây: Chỉ mục không gian hiệu quả cho việc tìm kiếm gần nhất có ràng buộc trong không gian số liệu.
+ https://arxiv.org/pdf/1511.
+ (http://arxiv.org/pdf/1511.00628.pdf) [00628.pdf] (http://arxiv.org/pdf/1511.00628.pdf)

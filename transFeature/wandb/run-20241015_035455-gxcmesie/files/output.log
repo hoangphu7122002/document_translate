@@ -1,0 +1,53 @@
+wandb: ERROR Error while calling W&B API: context deadline exceeded (<Response [500]>)
+wandb: ERROR Error while calling W&B API: context deadline exceeded (<Response [500]>)
+wandb: ERROR Error while calling W&B API: context deadline exceeded (<Response [500]>)
+No such comm target registered: jupyter.widget.control
+No such comm: 783426ca-9f09-4355-b50e-371dcb453ba5
+No such comm target registered: jupyter.widget.control
+No such comm: a8011b48-ed0a-4a4b-a608-be211cf78f97
+events.out.tfevents.1728960899.kao-dgxa-e10-u17.1261296.3: 100%|██████████| 353k/353k [00:00<00:00, 1.42MB/s]
+model.safetensors:   4%|▍         | 47.5M/1.10G [00:01<00:26, 40.0MB/s]
+Upload 2 LFS files: 100%|██████████| 2/2 [00:36<00:00, 18.48s/it]         | 0.00/353k [00:00<?, ?B/s]
+
+
+
+Map: 100%|██████████| 82475/82475 [00:04<00:00, 17406.14 examples/s]
+Map: 100%|██████████| 82475/82475 [00:04<00:00, 17923.53 examples/s]
+Map:   0%|          | 2/82475 [00:00<01:50, 748.25 examples/s]
+
+
+
+Map: 100%|██████████| 82475/82475 [00:04<00:00, 17352.15 examples/s]
+
+
+
+
+
+
+
+
+
+
+
+
+Map: 100%|██████████| 81475/81475 [00:27<00:00, 2941.06 examples/s]
+Map: 100%|██████████| 1000/1000 [00:00<00:00, 2142.77 examples/s]
+
+
+
+
+
+
+
+
+
+
+Map: 100%|██████████| 81475/81475 [00:26<00:00, 3054.01 examples/s]
+Map: 100%|██████████| 1000/1000 [00:00<00:00, 2717.29 examples/s]
+/home/minhnh/python_venv/nlp/lib/python3.9/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+Detected kernel version 5.4.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
