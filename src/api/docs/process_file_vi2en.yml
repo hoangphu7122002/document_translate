@@ -1,0 +1,21 @@
+process input file
+---
+
+parameters:
+  - in: formData
+    name: file
+    type: file
+    required: true
+    description: The file to upload
+  # - in: formData
+  #   name: doc_id
+  #   type: string
+  #   required: true
+  #   description: Document ID of uploaded file
+
+tags:
+  - "Translate"
+
+responses:
+  200:
+    description: Return something

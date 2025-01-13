@@ -1,0 +1,18 @@
+return summary from database
+---
+
+parameters:
+  - name: doc_id
+    description: Id of the document
+    type: string
+    in: query
+    required: true
+
+tags:
+  - "Summary"
+
+responses:
+  200:
+    description: Return related documents
+  404:
+    description: Cannot find document in database

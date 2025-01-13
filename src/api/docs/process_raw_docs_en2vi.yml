@@ -1,0 +1,35 @@
+process raw document en2vi
+---
+
+parameters:
+  - name: Documents
+    in: body
+    type: object
+    properties:
+      docs:
+        type: array
+        items:
+          type: string
+          description: Content of the document
+      # type:
+      #   type: string
+      #   enum: [ section, table ]
+      # multitask:
+      #   type: boolean
+    example:
+      docs: [ "Article 1. Scope of regulation and subjects of application \n 1. This Circular stipulates measures for implementing the Decree detailing the order and procedures for considering and awarding the “Glorious Youth Volunteer Medal” and the commendation and summary of resistance war achievements. \n 2. This Circular applies to Youth Volunteers with achievements in resistance wars, defending the Fatherland, completing their tasks, having served for 24 months or more; Youth Volunteers who sacrificed their lives while performing their duties in resistance wars, defending the Fatherland, and have been recognized as martyrs; Organizations and individuals related to the activities of considering and awarding the “Glorious Youth Volunteer Medal” and the commendation and summary of resistance war achievements. \nArticle 2. Consideration and posthumous awarding of the “Glorious Youth Volunteer Medal” 1. For Youth Volunteers who have been recognized as martyrs, the application for the posthumous award of the “Glorious Youth Volunteer Medal” shall be submitted at the residence of the Youth Volunteer's relatives.\n2. In case the application for the consideration and posthumous award of the “Glorious Youth Volunteer Medal” is invalid or needs to be fully supplemented according to regulations, the agency receiving the application shall guide the Youth Volunteer or the Youth Volunteer's relatives to complete the application and submit the application in accordance with regulations.\n3. In remote, isolated, extremely difficult, border, and island areas, the list of individuals proposed for consideration and posthumous award of the “Glorious Youth Volunteer Medal” shall, in addition to being publicly posted according to the provisions of Decree No. 28/2024/ND-CP dated March 6, 2024 of the Government, be publicly posted at the headquarters of the People's Committee. commune level people" ]
+      # type: section
+      # multitask: false
+    description: Documents to raw process without sectioning
+
+tags:
+  - "Translate"
+
+definitions:
+  Document:
+    type: object
+
+
+responses:
+  200:
+    description: Return something

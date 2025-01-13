@@ -1,0 +1,22 @@
+services:
+  document_summary:
+    image: translate_api:4
+    restart: always #on-failure
+
+    ports:
+      - 8003:8003
+    #volumes:
+      #- ./log:/var/log/
+      #- ./:/document_summarization/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    #entrypoint: ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "33", "src.api.api:run_app(env='phuong')", "--timeout", "300"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['5']
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all

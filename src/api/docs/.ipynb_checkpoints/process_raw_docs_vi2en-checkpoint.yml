@@ -1,0 +1,35 @@
+process raw document vi2en
+---
+
+parameters:
+  - name: Documents
+    in: body
+    type: object
+    properties:
+      docs:
+        type: array
+        items:
+          type: string
+          description: Content of the document
+      # type:
+      #   type: string
+      #   enum: [ section, table ]
+      # multitask:
+      #   type: boolean
+    example:
+      docs: [ "Điều 1. Phạm vi điều chỉnh và đối tượng áp dụng \n 1. Thông tư này quy định biện pháp thi hành Nghị định quy định chi tiết trình tự, thủ tục xét tặng, truy tặng “Huy chương Thanh niên xung phong vẻ vang” và việc khen thưởng tổng kết thành tích kháng chiến. \n 2. Thông tư này áp dụng đối với Thanh niên xung phong có thành tích trong các cuộc kháng chiến, bảo vệ Tổ quốc, hoàn thành nhiệm vụ, có thời gian tại ngũ từ đủ 24 tháng trở lên; Thanh niên xung phong hy sinh khi làm nhiệm vụ trong các cuộc kháng chiến, bảo vệ Tổ quốc, đã được công nhận liệt sĩ; Tổ chức, cá nhân liên quan tới hoạt động xét tặng, truy tặng “Huy chương Thanh niên xung phong vẻ vang” và việc khen thưởng tổng kết thành tích kháng chiến. \n Điều 2. Việc xét tặng, truy tặng “Huy chương Thanh niên xung phong vẻ vang” 1. Đối với Thanh niên xung phong đã được công nhận liệt sỹ, hồ sơ đề nghị truy tặng “Huy chương Thanh niên xung phong vẻ vang” được nộp tại nơi cư trú của thân nhân Thanh niên xung phong.\n 2. Trường hợp hồ sơ đề nghị xét tặng, truy tặng “Huy chương Thanh niên xung phong vẻ vang” không hợp lệ hoặc cần bổ sung đầy đủ theo quy định, cơ quan tiếp nhận hồ sơ hướng dẫn Thanh niên xung phong hoặc thân nhân của Thanh niên xung phong hoàn thiện hồ sơ và nộp hồ sơ đúng quy định.\n 3. Tại các địa điểm vùng sâu, vùng xa, vùng đặc biệt khó khăn, biên giới, hải đảo, danh sách cá nhân đề nghị xét tặng, truy tặng “Huy chương Thanh niên xung phong vẻ vang” ngoài việc niêm yết công khai theo quy định tại Nghị định số 28/2024/NĐ-CP ngày 06/3/2024 của Chính phủ thì thực hiện niêm yết công khai tại trụ sở Ủy ban nhân dân cấp xã" ]
+      # type: section
+      # multitask: false
+    description: Documents to raw process without sectioning
+
+tags:
+  - "Translate"
+
+definitions:
+  Document:
+    type: object
+
+
+responses:
+  200:
+    description: Return something

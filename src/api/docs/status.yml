@@ -1,0 +1,9 @@
+check processor service
+---
+
+tags: 
+  - "Health Check"
+
+responses:
+  200:
+    description: Return OK if services is running
